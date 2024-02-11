@@ -35,49 +35,49 @@ public abstract class AMdvneAdaptedScenario implements IScenario {
 	/**
 	 * Amount of CPU per substrate server.
 	 */
-	public final int substrateCpu = 32;
+	public int substrateCpu = 32;
 
 	/**
 	 * Amount of memory per substrate server.
 	 */
-	public final int substrateMem = 512;
+	public int substrateMem = 512;
 
 	/**
 	 * Amount of storage per substrate server.
 	 */
-	public final int substrateSto = 1000;
+	public int substrateSto = 1000;
 
 	/**
 	 * Amount of bandwidth per link that connects a substrate server.
 	 */
-	public final int substrateBwSrv = 1000;
+	public int substrateBwSrv = 1000;
 
 	/**
 	 * Amount of bandwidth for all links between rack and core switches.
 	 */
-	public final int substrateBwCore = 10_000;
+	public int substrateBwCore = 10_000;
 
 	/**
 	 * Number of substrate servers per rack.
 	 */
-	public final int serversPerRack = 10;
+	public int serversPerRack = 10;
 
 	/*
 	 * Virtual parameters
 	 */
 
-	public final int virtualCpuMin = 1;
-	public final int virtualCpuMax = 32;
-	public final int virtualMemMin = 1;
-	public final int virtualMemMax = 511;
-	public final int virtualStoMin = 50;
-	public final int virtualStoMax = 300;
+	public int virtualCpuMin = 1;
+	public int virtualCpuMax = 32;
+	public int virtualMemMin = 1;
+	public int virtualMemMax = 511;
+	public int virtualStoMin = 50;
+	public int virtualStoMax = 300;
 
-	public final int virtualTrafficMin = 100;
-	public final int virtualTrafficMax = 1000;
+	public int virtualTrafficMin = 100;
+	public int virtualTrafficMax = 1000;
 
-	public final int virtualServersMin = 2;
-	public final int virtualServersMax = 10;
+	public int virtualServersMin = 2;
+	public int virtualServersMax = 10;
 
 	/*
 	 * Utility methods
