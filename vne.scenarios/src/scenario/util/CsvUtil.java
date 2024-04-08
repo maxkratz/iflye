@@ -113,6 +113,43 @@ public class CsvUtil {
 			"time_deploy", "time_deploy_stddev", //
 			"time_rest", "time_rest_stddev" //
 	);
+	
+	public static String[] getCsvLine(final String lastVnr, final SubstrateNetwork sNet) {
+		final String[] content = new String[22];
+		content[0] = String.valueOf(csvCounter++); // line counter
+		content[1] = String.valueOf(java.time.LocalDateTime.now()); // time stamp
+		content[2] = String.valueOf(lastVnr); // name of the last embedded virtual network
+		content[3] = String.valueOf(GlobalMetricsManager.getRuntime().getPmValue() / MetricConsts.NANO_TO_MILLI); // PM
+		content[4] = String.valueOf(GlobalMetricsManager.getRuntime().getIlpValue() / MetricConsts.NANO_TO_MILLI); // ILP
+		content[5] = String.valueOf(GlobalMetricsManager.getRuntime().getDeployValue() / MetricConsts.NANO_TO_MILLI); // Deploy
+		content[6] = String.valueOf(GlobalMetricsManager.getRuntime().getRestValue() / MetricConsts.NANO_TO_MILLI); // Rest
+		content[7] = String.valueOf((int) new AcceptedVnrMetric(sNet).getValue());
+		content[8] = String.valueOf(new TotalPathCostMetric(sNet).getValue());
+		content[9] = String.valueOf(new AveragePathLengthMetric(sNet).getValue());
+		content[10] = String.valueOf(new TotalCommunicationCostMetricA(sNet).getValue());
+		content[11] = String.valueOf(new TotalCommunicationCostMetricB(sNet).getValue());
+		content[12] = String.valueOf(new TotalCommunicationCostMetricC(sNet).getValue());
+		content[13] = String.valueOf(new TotalCommunicationCostMetricD(sNet).getValue());
+		content[14] = String.valueOf(new TotalCommunicationCostObjectiveC(sNet).getValue());
+		content[15] = String.valueOf(new TotalCommunicationCostObjectiveD(sNet).getValue());
+		content[16] = String.valueOf(new TotalTafCommunicationCostMetric(sNet).getValue());
+		content[17] = String.valueOf(new OperatingCostMetric(sNet).getValue());
+		if (GlobalMetricsManager.getMemory() != null) {
+			// Memory start execute
+			content[18] = String.valueOf(GlobalMetricsManager.getMemory().getValue(0));
+			// Memory before ILP
+			content[19] = String.valueOf(GlobalMetricsManager.getMemory().getValue(1));
+			// Memory end execute
+			content[20] = String.valueOf(GlobalMetricsManager.getMemory().getValue(2));
+			// Maximum amount of memory (RAM) consumed
+			content[21] = String.valueOf(GlobalMetricsManager.getMemoryPid());
+		} else {
+			for (int i = 18; i <= 21; i++) {
+				content[i] = String.valueOf(-1);
+			}
+		}
+		return content;
+	}
 
 	/**
 	 * Appends the current state of the metrics to the CSV file.
@@ -222,7 +259,7 @@ public class CsvUtil {
 	 * @param format  Chosen header format of the CSV file.
 	 * @param content Content of the line to add as string array.
 	 */
-	private static void writeCsvLine(final String csvPath, final CSVFormat format, final String[] content) {
+	public static void writeCsvLine(final String csvPath, final CSVFormat format, final String[] content) {
 		// If file path is null, do not create a file at all
 		if (csvPath == null) {
 			return;
@@ -234,6 +271,35 @@ public class CsvUtil {
 			if (Files.notExists(Path.of(csvPath))) {
 				out = Files.newBufferedWriter(Paths.get(csvPath), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
 				try (final CSVPrinter printer = new CSVPrinter(out, format)) {
+					printer.close();
+				}
+			}
+
+			out = Files.newBufferedWriter(Paths.get(csvPath), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+			try (final CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT)) {
+				printer.printRecord((Object[]) content);
+				printer.close();
+			}
+			out.close();
+		} catch (final IOException e) {
+			// TODO: Error handling
+			e.printStackTrace();
+		}
+	}
+	
+
+	public static void writeCsvLine(final String csvPath, final String[] content) {
+		// If file path is null, do not create a file at all
+		if (csvPath == null) {
+			return;
+		}
+
+		try {
+			BufferedWriter out;
+			// If file does not exist, write header to it
+			if (Files.notExists(Path.of(csvPath))) {
+				out = Files.newBufferedWriter(Paths.get(csvPath), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+				try (final CSVPrinter printer = new CSVPrinter(out, formatNormal)) {
 					printer.close();
 				}
 			}
