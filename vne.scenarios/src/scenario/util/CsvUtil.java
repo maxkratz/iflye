@@ -27,6 +27,7 @@ import metrics.embedding.TotalCommunicationCostObjectiveC;
 import metrics.embedding.TotalCommunicationCostObjectiveD;
 import metrics.embedding.TotalPathCostMetric;
 import metrics.embedding.TotalTafCommunicationCostMetric;
+import metrics.embedding.WasAcceptedVnrMetric;
 import metrics.manager.GlobalMetricsManager;
 import model.SubstrateNetwork;
 
@@ -70,6 +71,8 @@ public class CsvUtil {
 			"total_communication_objective_d", //
 			"total_taf_communication_cost", //
 			"operation_cost", //
+			"success", //
+			"accepted_vnrs_before",
 			"memory_start", //
 			"memory_ilp", //
 			"memory_end", //
@@ -134,17 +137,19 @@ public class CsvUtil {
 		content[15] = String.valueOf(new TotalCommunicationCostObjectiveD(sNet).getValue());
 		content[16] = String.valueOf(new TotalTafCommunicationCostMetric(sNet).getValue());
 		content[17] = String.valueOf(new OperatingCostMetric(sNet).getValue());
+		content[18] = String.valueOf(new WasAcceptedVnrMetric(sNet, lastVnr).getValue());
+		
 		if (GlobalMetricsManager.getMemory() != null) {
 			// Memory start execute
-			content[18] = String.valueOf(GlobalMetricsManager.getMemory().getValue(0));
+			content[19] = String.valueOf(GlobalMetricsManager.getMemory().getValue(0));
 			// Memory before ILP
-			content[19] = String.valueOf(GlobalMetricsManager.getMemory().getValue(1));
+			content[20] = String.valueOf(GlobalMetricsManager.getMemory().getValue(1));
 			// Memory end execute
-			content[20] = String.valueOf(GlobalMetricsManager.getMemory().getValue(2));
+			content[21] = String.valueOf(GlobalMetricsManager.getMemory().getValue(2));
 			// Maximum amount of memory (RAM) consumed
-			content[21] = String.valueOf(GlobalMetricsManager.getMemoryPid());
+			content[22] = String.valueOf(GlobalMetricsManager.getMemoryPid());
 		} else {
-			for (int i = 18; i <= 21; i++) {
+			for (int i = 19; i <= 22; i++) {
 				content[i] = String.valueOf(-1);
 			}
 		}
@@ -159,7 +164,7 @@ public class CsvUtil {
 	 * @param sNet    Substrate network to export metrics for.
 	 */
 	public static void appendCsvLine(final String lastVnr, final String csvPath, final SubstrateNetwork sNet) {
-		final String[] content = new String[22];
+		final String[] content = new String[23];
 		content[0] = String.valueOf(csvCounter++); // line counter
 		content[1] = String.valueOf(java.time.LocalDateTime.now()); // time stamp
 		content[2] = String.valueOf(lastVnr); // name of the last embedded virtual network
@@ -178,20 +183,24 @@ public class CsvUtil {
 		content[15] = String.valueOf(new TotalCommunicationCostObjectiveD(sNet).getValue());
 		content[16] = String.valueOf(new TotalTafCommunicationCostMetric(sNet).getValue());
 		content[17] = String.valueOf(new OperatingCostMetric(sNet).getValue());
+		content[18] = String.valueOf(new WasAcceptedVnrMetric(sNet, lastVnr).getValue());
+		content[18] = String.valueOf(new WasAcceptedVnrMetric(sNet, lastVnr).getValue());
+
 		if (GlobalMetricsManager.getMemory() != null) {
 			// Memory start execute
-			content[18] = String.valueOf(GlobalMetricsManager.getMemory().getValue(0));
+			content[19] = String.valueOf(GlobalMetricsManager.getMemory().getValue(0));
 			// Memory before ILP
-			content[19] = String.valueOf(GlobalMetricsManager.getMemory().getValue(1));
+			content[20] = String.valueOf(GlobalMetricsManager.getMemory().getValue(1));
 			// Memory end execute
-			content[20] = String.valueOf(GlobalMetricsManager.getMemory().getValue(2));
+			content[21] = String.valueOf(GlobalMetricsManager.getMemory().getValue(2));
 			// Maximum amount of memory (RAM) consumed
-			content[21] = String.valueOf(GlobalMetricsManager.getMemoryPid());
+			content[22] = String.valueOf(GlobalMetricsManager.getMemoryPid());
 		} else {
-			for (int i = 18; i <= 21; i++) {
+			for (int i = 19; i <= 22; i++) {
 				content[i] = String.valueOf(-1);
 			}
 		}
+
 
 		writeCsvLine(csvPath, formatNormal, content);
 	}
