@@ -72,7 +72,6 @@ public class CsvUtil {
 			"total_taf_communication_cost", //
 			"operation_cost", //
 			"success", //
-			"accepted_vnrs_before",
 			"memory_start", //
 			"memory_ilp", //
 			"memory_end", //
