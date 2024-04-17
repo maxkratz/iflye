@@ -72,6 +72,8 @@ public class CsvUtil {
 			"total_taf_communication_cost", //
 			"operation_cost", //
 			"success", //
+			"inference_time", //
+			"embedding_time", //
 			"memory_start", //
 			"memory_ilp", //
 			"memory_end", //
@@ -163,7 +165,7 @@ public class CsvUtil {
 	 * @param sNet    Substrate network to export metrics for.
 	 */
 	public static void appendCsvLine(final String lastVnr, final String csvPath, final SubstrateNetwork sNet) {
-		final String[] content = new String[23];
+		final String[] content = new String[25];
 		content[0] = String.valueOf(csvCounter++); // line counter
 		content[1] = String.valueOf(java.time.LocalDateTime.now()); // time stamp
 		content[2] = String.valueOf(lastVnr); // name of the last embedded virtual network
@@ -183,19 +185,21 @@ public class CsvUtil {
 		content[16] = String.valueOf(new TotalTafCommunicationCostMetric(sNet).getValue());
 		content[17] = String.valueOf(new OperatingCostMetric(sNet).getValue());
 		content[18] = String.valueOf(new WasAcceptedVnrMetric(sNet, lastVnr).getValue());
-		content[18] = String.valueOf(new WasAcceptedVnrMetric(sNet, lastVnr).getValue());
+		content[19] = String.valueOf(GlobalMetricsManager.getMlVneRuntime().getInferenceValue() / MetricConsts.NANO_TO_MILLI);
+		content[20] = String.valueOf(GlobalMetricsManager.getMlVneRuntime().getEmbeddingValue() / MetricConsts.NANO_TO_MILLI);
+
 
 		if (GlobalMetricsManager.getMemory() != null) {
 			// Memory start execute
-			content[19] = String.valueOf(GlobalMetricsManager.getMemory().getValue(0));
+			content[21] = String.valueOf(GlobalMetricsManager.getMemory().getValue(0));
 			// Memory before ILP
-			content[20] = String.valueOf(GlobalMetricsManager.getMemory().getValue(1));
+			content[22] = String.valueOf(GlobalMetricsManager.getMemory().getValue(1));
 			// Memory end execute
-			content[21] = String.valueOf(GlobalMetricsManager.getMemory().getValue(2));
+			content[23] = String.valueOf(GlobalMetricsManager.getMemory().getValue(2));
 			// Maximum amount of memory (RAM) consumed
-			content[22] = String.valueOf(GlobalMetricsManager.getMemoryPid());
+			content[24] = String.valueOf(GlobalMetricsManager.getMemoryPid());
 		} else {
-			for (int i = 19; i <= 22; i++) {
+			for (int i = 21; i <= 24; i++) {
 				content[i] = String.valueOf(-1);
 			}
 		}

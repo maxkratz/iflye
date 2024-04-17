@@ -3,6 +3,7 @@ package metrics.manager;
 import metrics.MetricConfig;
 import metrics.memory.MemoryDetailedMetric;
 import metrics.memory.MemoryPidMetric;
+import metrics.time.MlVneRuntimeMetric;
 import metrics.time.RuntimeDetailedMetric;
 
 /**
@@ -27,6 +28,8 @@ public class GlobalMetricsManager {
 	 * Global memory detailed metric.
 	 */
 	static MemoryDetailedMetric mm;
+
+	static MlVneRuntimeMetric mlVneRt;
 
 	/**
 	 * Private constructor ensures no instantiation of this class.
@@ -184,6 +187,36 @@ public class GlobalMetricsManager {
 	 */
 	public static MemoryDetailedMetric getMemory() {
 		return mm;
+	}
+
+	public static MlVneRuntimeMetric getMlVneRuntime() {
+		return mlVneRt;
+	}
+
+	public static void startEmbeddingTime() {
+		mlVneRt.startEmbeddingTime();
+	}
+	
+	public static void endEmbeddingTime() {
+		mlVneRt.endEmbeddingTime();
+	}
+
+	public static void resetMlVneRuntime() {
+		mlVneRt = null;
+	}
+
+	public static void startMlVneRuntime() {
+		if (mlVneRt != null) {
+			throw new UnsupportedOperationException("MlVneRuntimeMetric was already created!");
+		}
+
+		mlVneRt = new MlVneRuntimeMetric();
+	}
+
+	public static void stopMlVneRuntime() {
+		if (mlVneRt != null) {
+			mlVneRt.stop();
+		}
 	}
 
 	/**
