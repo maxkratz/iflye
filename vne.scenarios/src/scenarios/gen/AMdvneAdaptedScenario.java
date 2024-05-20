@@ -26,7 +26,8 @@ public abstract class AMdvneAdaptedScenario implements IScenario {
 	/**
 	 * Pseudo random number generator with a seed.
 	 */
-	private final Random randGen = new Random(0);
+//	private final Random randGen = new Random(0);
+	public Random randGen = new Random(0);
 
 	/*
 	 * Substrate parameters
